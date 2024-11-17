@@ -22,6 +22,7 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Objects;
 
 //import variables that are important
 import static mainGame.Gameplay.playerAmount;
@@ -66,8 +67,8 @@ public class GameStartGeneration extends Menu{
     static JButton confirmButton;
 
     //--------------------------------------------------------------------------------------------------------------
-    //This method creates the game
-    public static void gameCreation(){
+//This method creates the game
+    public static void gameCreation() {
         //creates a new game with same players
         MainUI.gameCreation(0);
         //creates the start deck
@@ -85,8 +86,9 @@ public class GameStartGeneration extends Menu{
     }
 
     //--------------------------------------------------------------------------------------------------------------
-    //This method creates the modeSelect screen with the new player and old player screen. This is called from the WinGame class when the player is given the option to play with the same players or new
-    public static void modeSelectCreation(){
+//This method creates the modeSelect screen with the new player and old player screen.
+//This is called from the WinGame class when the player is given the option to play with the same players or new
+    public static void modeSelectCreation() {
         //creates a new JFrame for the modeWindow
         modeWindow = new JFrame();
         modeWindow.setSize(500, 500);
@@ -129,21 +131,21 @@ public class GameStartGeneration extends Menu{
         modeWindow.add(newPlayers, SwingConstants.CENTER);
     }
 
-    //this class registers the imputs for old or new players
+    //this class registers the inputs for old or new players
     static class buttonSelect implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             //plays the sound cardClick from the Sounds class
             Sounds.cardClick();
             //if the button pressed is equal to the oldPlayers
-            if (e.getSource() == oldPlayers){
+            if (e.getSource() == oldPlayers) {
                 //closes the windows and resets everything
                 modeWindow.dispose();
                 gameWindow.dispose();
                 resetAll();
                 //starts the game
                 gameCreation();
-            //if the button pressed is equal to the newPlayers button
-            } else if (e.getSource() == newPlayers){
+                //if the button pressed is equal to the newPlayers button
+            } else if (e.getSource() == newPlayers) {
                 //closes all windows
                 modeWindow.dispose();
                 gameWindow.dispose();
@@ -154,15 +156,15 @@ public class GameStartGeneration extends Menu{
     }
 
     //--------------------------------------------------------------------------------------------------------------
-    //Creates the lobby for the game
-    public static void lobbyCreation(boolean createdValue){
+//Creates the lobby for the game
+    public static void lobbyCreation(boolean createdValue) {
         //resets the variables to their primitive forms
         playerName = new JLabel[MAX_PLAYERS];
         counter = 0;
         open = false;
 
         //creates the menu if the createdValue is false
-        if (!createdValue){
+        if (!createdValue) {
             Sounds.backgroundMusic(1);
             menuWindow = new JFrame("UNO Game");
             menuWindow.setSize(MainUI.windowWidth, 1000);
@@ -172,16 +174,25 @@ public class GameStartGeneration extends Menu{
             menuWindow.setResizable(false);
             menuWindow.setVisible(true);
             //sets icon
-            ImageIcon icon = new ImageIcon(Main.path + "\\src\\mainGame\\images\\unoLogoPurple.png");
-            Image image = icon.getImage();
-            menuWindow.setIconImage(image);
+            try {
+                ImageIcon icon = new ImageIcon(Objects.requireNonNull(Menu.class.getClassLoader().getResource("mainGame/images/unoLogoPurple.png")));
+                menuWindow.setIconImage(icon.getImage());
+            } catch (NullPointerException e) {
+                System.err.println("Error: Icon image not found.");
+                e.printStackTrace();
+            }
         }
+
         //sets the background of the window
         try {
-            menuWindow.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File(Main.path + "\\src\\mainGame\\images\\menu-background.png")))));
-        } catch (IOException e) {
+            menuWindow.setContentPane(new JLabel(new ImageIcon(
+                    ImageIO.read(Objects.requireNonNull(Menu.class.getClassLoader().getResourceAsStream("mainGame/images/menu-background.png")))
+            )));
+        } catch (IOException | NullPointerException e) {
+            System.err.println("Error: Background image not found.");
             e.printStackTrace();
         }
+
         //--------------------------------------------------------------------------------------------------------------
         //creates the addPlayer button
         addPlayer = new JButton("Add Player");

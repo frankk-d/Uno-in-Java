@@ -16,6 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
+
 import static mainGame.storage.Fonts.*;
 
 public class Dan {
@@ -41,7 +43,7 @@ public class Dan {
         unoDraw = false;
 
         //Creates the icon for the UNO Button
-        ImageIcon icon = new ImageIcon(Main.path + "\\src\\mainGame\\images\\unoLogo.png");
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(MainUI.class.getResource("/mainGame/images/unoLogo.png")));
         Image img = icon.getImage();
         Image newImg = img.getScaledInstance( 200, 200,  java.awt.Image.SCALE_SMOOTH ) ;
         icon = new ImageIcon(newImg);
@@ -96,16 +98,16 @@ public class Dan {
     //This class manages what happens with the mouse and what image appears when the mouse clicks, exits, etc
     static class MyMouseListener implements MouseListener {
         //when the mouse is clicked
-        public void mouseClicked(MouseEvent e){   // moves the box at the mouse location
+        public void mouseClicked(MouseEvent e) {   // moves the box at the mouse location
             //stops the timer and removes the button
             timer.stop();
             unoButtonPanel.remove(unoButton);
             MainUI.gameWindow.remove(unoButtonPanel);
             //if the seconds when the button pressed is less than 2 seconds, then the turn ends
-            if (seconds <= 1){
+            if (seconds <= 1) {
                 Gameplay.endTurnButtonCreation();
-            //if the seconds that it takes to press the button is longer than 2 seconds, then draw two cards
-            } else if (seconds > 1){
+                //if the seconds that it takes to press the button is longer than 2 seconds, then draw two cards
+            } else if (seconds > 1) {
                 Deck.deck.setEnabled(true);
                 unoDraw = true;
                 Gameplay.currentEvent = false;
@@ -113,38 +115,41 @@ public class Dan {
 
             }
         }
-        //when the button is pressed
-        public void mousePressed(MouseEvent e){   // MUST be implemented even if not used!
-            ImageIcon icon = new ImageIcon(Main.path + "\\src\\mainGame\\images\\unoLogoClicked.png");
-            Image img = icon.getImage();
-            Image newImg = img.getScaledInstance( 200, 200, java.awt.Image.SCALE_SMOOTH);
-            icon = new ImageIcon(newImg);
-            iconImage.setIcon(icon);
-        }
-        //when the mouse is released
-        public void mouseReleased(MouseEvent e){  // MUST be implemented even if not used!
-            ImageIcon icon = new ImageIcon(Main.path + "\\src\\mainGame\\images\\unoLogo.png");
-            Image img = icon.getImage();
-            Image newImg = img.getScaledInstance( 200, 200,  java.awt.Image.SCALE_SMOOTH ) ;
-            icon = new ImageIcon(newImg);
-            iconImage.setIcon(icon);
 
+        //when the button is pressed
+        public void mousePressed(MouseEvent e) { // MUST be implemented even if not used!
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(MainUI.class.getResource("/mainGame/images/unoLogoClicked.png")));
+            Image img = icon.getImage();
+            Image newImg = img.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
+            icon = new ImageIcon(newImg);
+            iconImage.setIcon(icon);
         }
+
+        //when the mouse is released
+        public void mouseReleased(MouseEvent e) { // MUST be implemented even if not used!
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(MainUI.class.getResource("/mainGame/images/unoLogo.png")));
+            Image img = icon.getImage();
+            Image newImg = img.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
+            icon = new ImageIcon(newImg);
+            iconImage.setIcon(icon);
+        }
+
         //when the mouse enters
-        public void mouseEntered(MouseEvent e){   // MUST be implemented even if not used!
-            ImageIcon icon = new ImageIcon(Main.path + "\\src\\mainGame\\images\\unoLogoHover.png");
+        public void mouseEntered(MouseEvent e) { // MUST be implemented even if not used!
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(MainUI.class.getResource("/mainGame/images/unoLogoHover.png")));
             Image img = icon.getImage();
-            Image newImg = img.getScaledInstance( 200, 200,  java.awt.Image.SCALE_SMOOTH ) ;
+            Image newImg = img.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
             icon = new ImageIcon(newImg);
             iconImage.setIcon(icon);
         }
+
         //when the mouse exits
-        public void mouseExited(MouseEvent e){    // MUST be implemented even if not used!
-            ImageIcon icon = new ImageIcon(Main.path + "\\src\\mainGame\\images\\unoLogo.png");
+        public void mouseExited(MouseEvent e) { // MUST be implemented even if not used!
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(MainUI.class.getResource("/mainGame/images/unoLogo.png")));
             Image img = icon.getImage();
-            Image newImg = img.getScaledInstance( 200, 200, java.awt.Image.SCALE_SMOOTH);
+            Image newImg = img.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
             icon = new ImageIcon(newImg);
             iconImage.setIcon(icon);
         }
-    } // MyMouseListener class end
-}
+    }
+    }

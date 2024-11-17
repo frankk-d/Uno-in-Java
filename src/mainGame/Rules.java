@@ -14,6 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Objects;
+
 import static mainGame.storage.Fonts.POPPINS_BOLD;
 
 public class Rules extends Menu {
@@ -42,9 +44,9 @@ public class Rules extends Menu {
         //creates the instruction label with the instructions on how this game works
         instructionLabel = new JLabel();
         instructionLabel.setBounds(200, 150, 1280, 720);
-        ImageIcon icon = new ImageIcon(Main.path + "\\src\\mainGame\\images\\instructions.png");
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(MainUI.class.getResource("/mainGame/images/instructions.png")));
         Image img = icon.getImage();
-        Image newImg = img.getScaledInstance( 1280, 720, java.awt.Image.SCALE_SMOOTH);
+        Image newImg = img.getScaledInstance(1280, 720, java.awt.Image.SCALE_SMOOTH);
         icon = new ImageIcon(newImg);
         instructionLabel.setIcon(icon);
         menuWindow.add(instructionLabel);

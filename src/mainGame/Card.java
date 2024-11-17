@@ -16,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import mainGame.MainUI.*;
 import static mainGame.storage.Fonts.*;
@@ -139,6 +140,10 @@ public class Card {
 
     //--------------------------------------------------------------------------------------------------------------
     //creates the starting deck
+
+    /**
+     * 
+     */
     public static void startDeck() {
         String card;
         //repeats for the amount of players and creates a deck of cards for the amount selected to be generated
@@ -262,7 +267,6 @@ public class Card {
 
         //creates fonts
         Font montserrat = fontCreator(MONTSERRAT_BLACK, 60f);
-        Font arial = fontCreator("arial-unicode-ms", 60f);
 
         //repeats for the amount of cards in the row
         for (int i = 0; i < rowAmount; i++) {
@@ -376,19 +380,28 @@ public class Card {
     }
     //--------------------------------------------------------------------------------------------------------------
     //This method creates a font with the font name and size
-    public static Font fontCreator(String fontName, Float fontSize){
+    public static Font fontCreator(String fontPath, Float fontSize) {
         Font font = null;
-        try {GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            //creates font to the file place
-            font = Font.createFont(Font.TRUETYPE_FONT, new File(fontName)).deriveFont(fontSize);
-            ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fontName)));
-        } catch (IOException|FontFormatException e) {}
-        //returns the font
-        return font;
+        try {
+            // Load font from resources using getResourceAsStream
+            InputStream fontStream = MainUI.class.getResourceAsStream("/mainGame/fonts/" + fontPath);
+            if (fontStream == null) {
+                throw new IOException("Font resource not found: " + fontPath);
+            }
+            Font baseFont = Font.createFont(Font.TRUETYPE_FONT, fontStream);
+            font = baseFont.deriveFont(fontSize);
 
-
+            // Register the font with the graphics environment
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(baseFont);
+        } catch (IOException | FontFormatException e) {
+            e.printStackTrace();
+            System.err.println("Failed to load or register font: " + fontPath);
+        }
+        // Return the created font or a default font if an error occurred
+        return (font != null) ? font : new Font("SansSerif", Font.PLAIN, Math.round(fontSize));
     }
-    //--------------------------------------------------------------------------------------------------------------
+
     //this method makes all the cards to three for the special card
     public static void toThree(){
         String newDeck = "";

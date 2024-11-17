@@ -10,7 +10,9 @@ import mainGame.Main;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.InputStream;
 
 public class Sounds {
     //initialize variables
@@ -101,28 +103,35 @@ public class Sounds {
 
     //--------------------------------------------------------------------------------------------------------------
     //This method plays background music
-    public static void backgroundMusic(int value){
+    public static void backgroundMusic(int value) {
         final int MUSIC_GAME = 0;
         final int MUSIC_MENU = 1;
-        //If there is music already playing, then stop the music playing
-        if (musicPlaying){
+
+        // Stop the current music if it's playing
+        if (musicPlaying && music != null) {
             music.stop();
         }
+
+        // Reset flags
         stressMusic = false;
         musicPlaying = true;
 
-        //if the value is equal to the music in the game, then play the heart home city theme
-        if (value == MUSIC_GAME){
+        // Play the appropriate music based on the value
+        if (value == MUSIC_GAME) {
             musicCreator("Hearthome City Night.wav");
-        //if the value is equal to the music in the menu, then play a random song
-        } else if (value == MUSIC_MENU){
-            //plays a random generated song and plays it
-            int generatedSong = (int)(2*Math.random());
-            if (generatedSong == 0){
+        } else if (value == MUSIC_MENU) {
+            int generatedSong = (int) (2 * Math.random());
+            if (generatedSong == 0) {
                 musicCreator("Route 228 Night.wav");
-            } else if (generatedSong >= 1){
+            } else {
                 musicCreator("Route 209 Night.wav");
             }
+        }
+
+        // Check if music was initialized successfully
+        if (music == null) {
+            System.err.println("Music initialization failed. Check file paths and formats.");
+            musicPlaying = false; // Ensure the musicPlaying flag reflects the actual state
         }
     }
 
@@ -155,39 +164,57 @@ public class Sounds {
 
     //--------------------------------------------------------------------------------------------------------------
     //This method plays a sound
-    public static void soundCreator(String fileName){
-        try{
-            //saves the file name as a string
-            String soundName = fileName;
-            AudioInputStream audioStream  = AudioSystem.getAudioInputStream(new File(filePath + soundName));
+    public static void soundCreator(String fileName) {
+        try {
+            // Load the audio file as a resource stream
+            InputStream audioStream = Sounds.class.getClassLoader().getResourceAsStream("mainGame/sounds/" + fileName);
+            if (audioStream == null) {
+                System.err.println("Error: Sound file not found: " + fileName);
+                return;
+            }
+
+            // Create an AudioInputStream from the resource stream
+            AudioInputStream inputAudio = AudioSystem.getAudioInputStream(new BufferedInputStream(audioStream));
             clip = AudioSystem.getClip();
-            clip.open(audioStream);
-        } catch (Exception ex){}
-        //If a sound is playing
-        if (clip.isRunning()){
-            //stop iot
-            clip.stop();
-            clip.flush();
-            clip.setFramePosition(0);
+            clip.open(inputAudio);
+
+            // Stop any currently playing sound
+            if (clip.isRunning()) {
+                clip.stop();
+                clip.flush();
+                clip.setFramePosition(0);
+            }
+
+            // Start the sound
+            clip.start();
+
+        } catch (Exception ex) {
+            System.err.println("Error initializing sound: " + fileName);
+            ex.printStackTrace();
         }
-        //start the sound
-        clip.start();
     }
 
-    //--------------------------------------------------------------------------------------------------------------
-    //This method plays and creates music
-    public static void musicCreator(String fileName){
-        try{
-            //creates new AudioInputStream object for the file
-            String soundName = fileName;
-            AudioInputStream audioStream  = AudioSystem.getAudioInputStream(new File(filePath + soundName));
+    public static void musicCreator(String fileName) {
+        try {
+            // Load the music file as a resource stream
+            InputStream musicStream = Sounds.class.getClassLoader().getResourceAsStream("mainGame/sounds/" + fileName);
+            if (musicStream == null) {
+                System.err.println("Error: Music file not found: " + fileName);
+                return;
+            }
+
+            // Create an AudioInputStream from the resource stream
+            AudioInputStream inputAudio = AudioSystem.getAudioInputStream(new BufferedInputStream(musicStream));
             music = AudioSystem.getClip();
-            music.open(audioStream);
-        } catch (Exception ex){}
-        //start the music
-        music.start();
-        //loops the music
-        music.loop(Clip.LOOP_CONTINUOUSLY);
+            music.open(inputAudio);
+
+            // Start and loop the music
+            music.start();
+            music.loop(Clip.LOOP_CONTINUOUSLY);
+
+        } catch (Exception ex) {
+            System.err.println("Error initializing music: " + fileName);
+            ex.printStackTrace();
+        }
     }
-;
 }

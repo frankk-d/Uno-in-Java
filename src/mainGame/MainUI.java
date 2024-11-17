@@ -20,6 +20,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
+
 import static mainGame.storage.Fonts.POPPINS_BOLD;
 
 public class MainUI{
@@ -60,13 +62,17 @@ public class MainUI{
             gameWindow.setLayout(null);
             gameWindow.setLocationRelativeTo(null);
             gameWindow.setResizable(false);
-            ImageIcon icon = new ImageIcon(Main.path + "\\src\\mainGame\\images\\unoLogoPurple.png");
+            // Use getResource to load the icon
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(MainUI.class.getResource("/mainGame/images/unoLogoPurple.png")));
             Image image = icon.getImage();
             gameWindow.setIconImage(image);
             gameWindow.setVisible(true);
         }
+
         try {
-            gameWindow.setContentPane(new JLabel(new ImageIcon(ImageIO.read(new File(Main.path + "\\src\\mainGame\\images\\Uno-Background.png")))));
+            // Use getResourceAsStream to load the background image
+            gameWindow.setContentPane(new JLabel(
+                    new ImageIcon(ImageIO.read(Objects.requireNonNull(MainUI.class.getResourceAsStream("/mainGame/images/Uno-Background.png"))))));
         } catch (IOException e) {
             e.printStackTrace();
         }
