@@ -1,0 +1,1 @@
+out/artifacts/UnoGame_jar/UnoGame.jar filter=lfs diff=lfs merge=lfs -text

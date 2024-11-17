@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="UnoGame:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/UnoGame_jar</output-path>
+    <root id="archive" name="UnoGame.jar">
+      <element id="module-output" name="UnoGame" />
+    </root>
+  </artifact>
+</component>
